@@ -28,6 +28,7 @@ RM						= rm -f
 #Source Files---------------------------------------
 SRCS 					= $(SRC_DIR)pipex.c \
 						$(SRC_DIR)utils.c \
+						$(SRC_DIR)bonus_utils.c \
 #Obj Files-----------------------------------------------------------------
 OBJ						= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 

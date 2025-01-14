@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:35:13 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/13 13:36:17 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:50:10 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@
 
 //Error----------------------
 void	ft_error(void);
+void	usage(void);
 //parsing-------------------
+int		get_next_line(char **line);
 void	cmd_exec(char *argv, char **envp);
+int		open_file(char *argv, int i);
 
 #endif
