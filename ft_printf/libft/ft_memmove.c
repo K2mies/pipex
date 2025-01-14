@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_example00.c                                 :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 15:16:40 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:05 by rhvidste         ###   ########.fr       */
+/*   Created: 2024/10/29 14:11:12 by rhvidste          #+#    #+#             */
+/*   Updated: 2024/11/11 13:05:16 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#include "libft.h"
 
-int		main()
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char	*args[3];
+	unsigned char	*temp;
+	unsigned char	*dst;
 
-	args[0] = "ls";
-	args[1] = "-l";
-	args[2] = NULL;
-
-	execve("/bin/ls", args, NULL);
-	printf("This line will not be executed.\n");
-	return (0);
+	temp = (unsigned char *)src;
+	dst = (unsigned char *)dest;
+	if (temp < dst)
+	{
+		while (n--)
+			dst[n] = temp[n];
+	}
+	else
+		ft_memcpy(dest, src, n);
+	return (dst);
 }

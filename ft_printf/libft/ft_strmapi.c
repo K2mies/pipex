@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_example00.c                                 :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 15:16:40 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:05 by rhvidste         ###   ########.fr       */
+/*   Created: 2024/11/08 09:44:25 by rhvidste          #+#    #+#             */
+/*   Updated: 2024/11/14 17:50:45 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#include "libft.h"
 
-int		main()
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char	*args[3];
+	int		i;
+	int		len;
+	char	*dest;
 
-	args[0] = "ls";
-	args[1] = "-l";
-	args[2] = NULL;
-
-	execve("/bin/ls", args, NULL);
-	printf("This line will not be executed.\n");
-	return (0);
+	if (s == NULL)
+		return (NULL);
+	len = ft_strlen(s);
+	dest = malloc(sizeof(char) * len + 1);
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		dest[i] = f(i, s[i]);
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }

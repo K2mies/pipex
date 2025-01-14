@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_example00.c                                 :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 15:16:40 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:05 by rhvidste         ###   ########.fr       */
+/*   Created: 2024/11/04 13:46:10 by rhvidste          #+#    #+#             */
+/*   Updated: 2024/11/13 10:55:13 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#include "libft.h"
 
-int		main()
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	*args[3];
+	unsigned char	*ptr;
+	size_t			i;
+	size_t			result;
 
-	args[0] = "ls";
-	args[1] = "-l";
-	args[2] = NULL;
-
-	execve("/bin/ls", args, NULL);
-	printf("This line will not be executed.\n");
-	return (0);
+	i = 0;
+	result = nmemb * size;
+	if (nmemb && size != result / nmemb)
+		return (NULL);
+	ptr = (void *)malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	while (i < nmemb * size)
+		ptr[i++] = 0;
+	return (ptr);
 }

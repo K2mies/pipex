@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_example00.c                                 :+:      :+:    :+:   */
+/*   ft_print.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 15:16:40 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:05 by rhvidste         ###   ########.fr       */
+/*   Created: 2024/11/19 09:33:11 by rhvidste          #+#    #+#             */
+/*   Updated: 2024/11/21 17:10:28 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#ifndef FT_PRINT_H
+# define FT_PRINT_H
 
-int		main()
-{
-	char	*args[3];
+# include <stdarg.h>
+# include <unistd.h>
 
-	args[0] = "ls";
-	args[1] = "-l";
-	args[2] = NULL;
+int	ft_printchar(int c);
+int	ft_printstr(const char *str);
+int	ft_printptr(void *ptr);
+int	ft_printnbr(int nb);
+int	ft_printunsigned(unsigned int n);
+int	ft_print_hex(unsigned int num, const char format);
+int	ft_printpercent(void);
 
-	execve("/bin/ls", args, NULL);
-	printf("This line will not be executed.\n");
-	return (0);
-}
+#endif

@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_example00.c                                 :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 15:16:40 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:05 by rhvidste         ###   ########.fr       */
+/*   Created: 2024/11/01 09:47:01 by rhvidste          #+#    #+#             */
+/*   Updated: 2024/11/14 16:07:48 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#include "libft.h"
 
-int		main()
+char	*ft_strchr(const char *s, int c)
 {
-	char	*args[3];
+	size_t		i;
 
-	args[0] = "ls";
-	args[1] = "-l";
-	args[2] = NULL;
-
-	execve("/bin/ls", args, NULL);
-	printf("This line will not be executed.\n");
-	return (0);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i++;
+	}
+	if (s[i] == (char)c)
+		return ((char *)(s + i));
+	return (NULL);
 }

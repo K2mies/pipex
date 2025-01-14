@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_example00.c                                 :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 15:16:40 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:05 by rhvidste         ###   ########.fr       */
+/*   Created: 2024/11/01 14:17:24 by rhvidste          #+#    #+#             */
+/*   Updated: 2024/11/12 14:20:37 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#include "libft.h"
 
-int		main()
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	char	*args[3];
+	size_t	i;
 
-	args[0] = "ls";
-	args[1] = "-l";
-	args[2] = NULL;
-
-	execve("/bin/ls", args, NULL);
-	printf("This line will not be executed.\n");
+	if (n == 0)
+		return (0);
+	i = 0;
+	while (i < n)
+	{
+		if (s1[i] == '\0' || s2[i] == '\0')
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
 	return (0);
 }
