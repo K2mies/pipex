@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:37:48 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/15 15:11:05 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:01:17 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	usage(void)
 	exit(EXIT_SUCCESS);
 }
 
-int		open_file(char *argv, int i)
+int	open_file(char *argv, int i)
 {
 	int	file;
 
@@ -48,7 +48,7 @@ int	get_next_line(char **line)
 	if (!buffer)
 		return (-1);
 	r = read(0, &c, 1);
-	while (r &&c != '\n' && c != '\0')
+	while (r && c != '\n' && c != '\0')
 	{
 		if (c != '\n' && c != '\0')
 			buffer[i] = c;

@@ -6,12 +6,11 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:02:10 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/15 15:11:02 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:00:43 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
 
 void	ft_error(void)
 {
@@ -21,7 +20,8 @@ void	ft_error(void)
 
 void	free_array(char **arr)
 {
-	int 	i;
+	int	i;
+
 	i = 0;
 	while (arr[i])
 	{
@@ -30,19 +30,15 @@ void	free_array(char **arr)
 	free(arr);
 }
 
-char	*path_parsing(char *command, char **envp)
+char	*set_paths(char *command, char **mypaths)
 {
-	char	**mypaths;
-	char	*onepath;
+	bool	it_works;
 	char	*fullpath;
+	char	*onepath;
 	int		i;
-	bool it_works = false;
 
 	i = 0;
-	while (!ft_strnstr(envp[i], "PATH", 4))
-		i++;
-	mypaths = ft_split(envp[i] + 5, ':');
-	i = 0;
+	it_works = false;
 	while (mypaths[i])
 	{
 		onepath = ft_strjoin(mypaths[i], "/");
@@ -56,11 +52,26 @@ char	*path_parsing(char *command, char **envp)
 		else
 			free(fullpath);
 		i++;
-	}
+	}	
 	free_array(mypaths);
 	if (it_works)
 		return (fullpath);
 	return (NULL);
+}
+
+char	*path_parsing(char *command, char **envp)
+{
+	char	**mypaths;
+	char	*fullpath;
+	int		i;
+
+	i = 0;
+	while (!ft_strnstr(envp[i], "PATH", 4))
+		i++;
+	mypaths = ft_split(envp[i] + 5, ':');
+	i = 0;
+	fullpath = set_paths(command, mypaths);
+	return (fullpath);
 }
 
 void	cmd_exec(char *argv, char **envp)
