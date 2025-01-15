@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:02:10 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/15 13:27:27 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:10:28 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,6 @@ void	ft_error(void)
 	exit(EXIT_FAILURE);
 }
 
-/*int	get_next_line(char **line)
-{
-	char 	*buffer;
-	int		i;
-	int		r;
-	char	c;
-
-	i = 0;
-	r = 0;
-	buffer = (char *)malloc(10000);
-	if (!buffer)
-		return (-1);
-	r = read(0, &c, 1);
-	while (r && c != '\n' && c != '\0')
-	{
-		if (c != '\n' && c != '\0')
-			buffer[i] = c;
-		i++;
-		r = read(0, &c, 1);
-	}
-	buffer[i] = '\n';
-	buffer[++i] = '\0';
-	*line = buffer;
-	free(buffer);
-	return (r);
-}
-*/
 void	free_array(char **arr)
 {
 	int 	i;

@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:08:51 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/15 14:05:32 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:10:16 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void	here_doc(char *limiter, int argc)
 		wait(NULL);
 	}
 }
+
+//for valgrind.
+//Use the --trace-children=yes option to track child processes.
+//Add the --track-fds=yes option to check for file descriptor leaks
 
 int	main(int argc, char **argv, char **envp)
 {
