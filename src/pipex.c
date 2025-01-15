@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:08:51 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/15 13:40:13 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 14:05:32 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	here_doc(char *limiter, int argc)
 		{
 			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
 			{
-				free(line);
+				//free(line);
 				exit(EXIT_SUCCESS);
 			}
 			write(fd[1], line, ft_strlen(line));
