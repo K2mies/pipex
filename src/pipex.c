@@ -6,79 +6,118 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:08:51 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 11:24:00 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:11:03 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	child_1_process(char **argv, char **envp, int *fd)
-{
-	//printf("child 1 process entered");
-	//(void)envp;
-	int	file1;
 
-	file1 = open(argv[1], O_RDONLY, 0777);
-	if (file1 == -1)
+/*Child process that creates a fork and a pipe. Then puts the output inside a pipe
+* and then closes with the exec function: the main process will change its stdin
+* for the pipe file descriptor
+*/
+
+void	child_process(char *argv, char **envp)
+{
+	pid_t	pid;
+	int	fd[2];
+
+	if (pipe(fd) == -1)
 		ft_error();
-	//replace stdin with contents of file1.
-	dup2(file1, STDIN_FILENO);
-	//replace stdout with write end of the pipe.
-	dup2(fd[1], STDOUT_FILENO);
-	//closing the read end
-	close(fd[0]);
-	//cmd execution
-	cmd_exec(argv[2], envp);
+	pid = fork();
+	if (pid == -1)
+		ft_error();
+	if (pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		cmd_exec(argv, envp);
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		waitpid(pid, NULL, 0);
+	}
+}
+/*Function to make a child process that will read from the strin with
+*get next line untill it finds the limiter word and then puts the output inside
+*a pipe. The main process will change its stdin for the pipe file descriptor.
+*/
+
+void	here_doc(char *limiter, int argc)
+{
+	pid_t	reader;
+	int		fd[2];
+	char	*line;
+
+	if (argc < 6)
+		usage();
+	if (pipe(fd) == -1)
+		ft_error();
+	reader = fork();
+	if (reader == 0)
+	{
+		close(fd[0]);//closing read end of the pipe.
+		while (get_next_line(&line))
+		{
+			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+			{
+				//free(line);
+				exit(EXIT_SUCCESS);
+			}
+			write(fd[1], line, ft_strlen(line));
+		}
+		close(fd[1]);//!!
+		free(line);
+	}
+	else
+	{
+		close(fd[1]);//closing write end of the pipe
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);//!!
+		wait(NULL);
+	}
 }
 
-void	child_2_process(char **argv, char **envp, int *fd)
-{
-	//printf("child 2 process entered");
-	//(void)envp;
-	int	file2;
-
-	file2 = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (file2 == -1)
-		ft_error();
-	//replace stdin with read enf od the pipe.
-	dup2(fd[0], STDIN_FILENO);
-	//replace stdout with file2.
-	dup2(file2, STDOUT_FILENO);
-	//close the writing end.
-	close(fd[1]);
-	cmd_exec(argv[3], envp);
-}
+//for valgrind.
+//Use the --trace-children=yes option to track child processes.
+//Add the --track-fds=yes option to check for file descriptor leaks
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		fd[2];
-	pid_t	child1;
-	pid_t	child2;
 
-	if (argc == 5)
+	int		i;
+	int		filein;
+	int		fileout;
+
+	if (argc >= 5)
 	{
-		if (pipe(fd) == -1)
-			ft_error();
-		//first fork------------------------
-		child1 = fork();
-		if (child1 == -1)
-			ft_error();
-		if (child1 == 0)
-			child_1_process(argv, envp, fd);
-		//second fork-----------------------
-		child2 = fork();
-		if (child2 == -1)
-			ft_error();
-		if (child2 == 0)
-			child_2_process(argv, envp, fd);
-		//close the parent------------------
-		close(fd[0]);
-		close(fd[1]);
-		//wait for child porcesses----------
-		waitpid(child1, NULL, 0);
-		waitpid(child2, NULL, 0);
+		//check for here_doc input
+		if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+		{
+			i = 3;
+			fileout = open_file(argv[argc -1], 0);
+			here_doc(argv[2], argc);
+		}
+		else
+		{
+			i = 2;	
+			fileout = open_file(argv[argc - 1], 1);
+			filein = open_file(argv[1], 2);
+			dup2(filein, STDIN_FILENO);
+		}
+		while (i < argc - 2)
+		{
+			child_process(argv[i++], envp);
+			dup2(fileout, STDOUT_FILENO);
+			cmd_exec(argv[argc - 2], envp);
+		}
+		close(filein);
+		close(fileout);
 	}
-	else
-		ft_error();
-		
+	usage();	
 }
