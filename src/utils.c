@@ -6,11 +6,12 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:02:10 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 16:19:58 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:27:27 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pipex.h>
+#include "pipex.h"
+
 
 void	ft_error(void)
 {
@@ -18,7 +19,7 @@ void	ft_error(void)
 	exit(EXIT_FAILURE);
 }
 
-int	get_next_line(char **line)
+/*int	get_next_line(char **line)
 {
 	char 	*buffer;
 	int		i;
@@ -44,6 +45,17 @@ int	get_next_line(char **line)
 	free(buffer);
 	return (r);
 }
+*/
+void	free_array(char **arr)
+{
+	int 	i;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i++]);
+	}
+	free(arr);
+}
 
 char	*path_parsing(char *command, char **envp)
 {
@@ -51,6 +63,7 @@ char	*path_parsing(char *command, char **envp)
 	char	*onepath;
 	char	*fullpath;
 	int		i;
+	bool it_works = false;
 
 	i = 0;
 	while (!ft_strnstr(envp[i], "PATH", 4))
@@ -63,11 +76,18 @@ char	*path_parsing(char *command, char **envp)
 		fullpath = ft_strjoin(onepath, command);
 		free(onepath);
 		if (access(fullpath, F_OK) == 0)
-			return (fullpath);
-		free(fullpath);
+		{
+			it_works = true;
+			break ;
+		}
+		else
+			free(fullpath);
 		i++;
 	}
-	return (0);
+	free_array(mypaths);
+	if (it_works)
+		return (fullpath);
+	return (NULL);
 }
 
 void	cmd_exec(char *argv, char **envp)
@@ -81,22 +101,15 @@ void	cmd_exec(char *argv, char **envp)
 	path = path_parsing(command[0], envp);
 	if (!path)
 	{
-		while (command[++i])
-			free(command[i]);
-		free(command);
-		free(path);
+		free_array(command);
 		ft_error();
 	}
 	if (execve(path, command, envp) == -1)
 	{
-		while (command[++i])
-			free(command[i]);
-		free(command);
+		free_array(command);
 		free(path);
 		ft_error();
 	}
-	while (command[++i])
-		free(command[i]);
-	free(command);
+	free_array(command);
 	free(path);
 }

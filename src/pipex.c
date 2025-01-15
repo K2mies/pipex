@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:08:51 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/14 16:19:51 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:40:13 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ void	child_process(char *argv, char **envp)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
 		cmd_exec(argv, envp);
 	}
 	else
 	{
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
 		waitpid(pid, NULL, 0);
 	}
 }
@@ -59,19 +61,24 @@ void	here_doc(char *limiter, int argc)
 	reader = fork();
 	if (reader == 0)
 	{
-		close(fd[0]);
+		close(fd[0]);//closing read end of the pipe.
 		while (get_next_line(&line))
 		{
 			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+			{
+				free(line);
 				exit(EXIT_SUCCESS);
+			}
 			write(fd[1], line, ft_strlen(line));
 		}
+		close(fd[1]);//!!
 		free(line);
 	}
 	else
 	{
-		close(fd[1]);
+		close(fd[1]);//closing write end of the pipe
 		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);//!!
 		wait(NULL);
 	}
 }
@@ -94,7 +101,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 		{
-			i = 2;
+			i = 2;	
 			fileout = open_file(argv[argc - 1], 1);
 			filein = open_file(argv[1], 2);
 			dup2(filein, STDIN_FILENO);
@@ -105,6 +112,8 @@ int	main(int argc, char **argv, char **envp)
 			dup2(fileout, STDOUT_FILENO);
 			cmd_exec(argv[argc - 2], envp);
 		}
+		close(filein);
+		close(fileout);
 	}
 	usage();	
 }
