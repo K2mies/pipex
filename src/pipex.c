@@ -6,7 +6,7 @@
 /*   By: rhvidste <rhvidste@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:08:51 by rhvidste          #+#    #+#             */
-/*   Updated: 2025/01/15 16:36:18 by rhvidste         ###   ########.fr       */
+/*   Updated: 2025/01/16 11:13:06 by rhvidste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,16 @@ void	child_process(char *argv, char **envp)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
+		if (dup2(fd[1], STDOUT_FILENO) == -1)
+			ft_error();
 		close(fd[1]);
 		cmd_exec(argv, envp);
 	}
 	else
 	{
 		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			ft_error();
 		close(fd[0]);
 		waitpid(pid, NULL, 0);
 	}
